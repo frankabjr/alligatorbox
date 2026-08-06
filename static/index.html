@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlligatorBox - Encrypted File Sharing</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+
+<header>
+    <div class="header-inner">
+      <div class="logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+      </div>
+      <h1>AlligatorBox</h1>
+      <span class="badge badge-blue">E2E Encrypted</span>
+      <span class="tagline" style="margin-left:auto">Your files, encrypted before upload</span>
+    </div>
+</header>
+
+<main>
+
+    <!-- - Upload state -->
+    <div id="upload-state">
+
+      <!-- Drop zone -->
+      <div class="card" style="padding:0;overflow:hidden;">
+        <div id="drop-zone">
+          <input type="file" id="file-input" style="display:none">
+
+          <!-- Prompt (hidden when file selected) -->
+          <div class="drop-prompt">
+            <div class="drop-icon">&#128230;</div>
+            <p><strong>Drop a file here</strong> or click to browse</p>
+            <p style="margin-top:.35rem;font-size:.78rem;">Up to 10 GB - encrypted entirely in your browser</p>
+          </div>
+
+          <!-- File info (hidden until file selected) -->
+          <div id="file-info" class="hidden">
+            <div class="fi-icon">&#128196;</div>
+            <div class="fi-meta">
+              <div class="fi-name" id="file-name"></div>
+              <div class="fi-size" id="file-size"></div>
+            </div>
+            <button class="icon-btn" id="clear-file" title="Remove file">&times;</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings -->
+      <div class="card">
+        <div class="card-title">Encryption password</div>
+        <div class="pass-wrap">
+          <input type="text" id="password" placeholder="Auto-generated passphrase" autocomplete="off" spellcheck="false">
+          <div class="pass-actions">
+            <button class="icon-btn" id="toggle-pass" title="Show/hide">&#128065;</button>
+            <button class="icon-btn" id="refresh-pass" title="Generate new">&#128260;</button>
+          </div>
+        </div>
+        <p class="text-muted mt-1">Share this password separately from the link. Never sent to the server.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Expiration (optional)</div>
+        <div class="settings-grid">
+          <div>
+            <label for="expire-days">Delete after N days</label>
+            <input type="number" id="expire-days" min="0" max="365" placeholder="0 = never">
+          </div>
+          <div>
+            <label for="expire-downloads">Delete after N downloads</label>
+            <input type="number" id="expire-downloads" min="0" max="999" placeholder="0 = unlimited">
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" id="upload-btn" disabled>
+        &#128274; Encrypt &amp; Upload
+      </button>
+
+    </div><!-- /upload-state -->
+
+
+    <!-- - Progress state -->
+    <div id="progress-state" class="hidden">
+      <div class="card">
+        <div class="card-title">Uploading</div>
+        <div style="font-size:1.1rem;font-weight:600;margin-bottom:.5rem;">Encrypting &amp; uploading your file&hellip;</div>
+        <p class="text-muted mb-1">The server only receives ciphertext. Your key never leaves this browser.</p>
+        <div class="progress-wrap">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        <div class="progress-label" id="progress-label">Starting&hellip;</div>
+      </div>
+    </div>
+
+
+    <!-- - Success state -->
+    <div id="success-state" class="hidden">
+      <div class="card">
+        <div class="success-icon">&#127889;</div>
+        <div style="font-size:1.2rem;font-weight:700;text-align:center;margin-bottom:.25rem;">File ready to share!</div>
+        <p class="text-muted text-center mb-1">Send the link <em>and</em> the password to the recipient. Keep them separate for security.</p>
+
+        <div style="margin-top:1.25rem;">
+          <label>Download link</label>
+          <div class="share-row">
+            <input type="text" id="share-url" readonly>
+            <button class="btn btn-secondary" id="copy-url">Copy link</button>
+          </div>
+
+          <label>Password</label>
+          <div class="share-row">
+            <input type="text" id="share-pass" readonly style="font-family:monospace;letter-spacing:.04em;">
+            <button class="btn btn-secondary" id="copy-pass">Copy password</button>
+          </div>
+
+          <button class="btn btn-primary" id="copy-both" style="margin-top:.5rem;">
+            &#128203; Copy link + password
+          </button>
+        </div>
+
+        <div style="margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border);">
+          <div class="card-title">One-click sharing link</div>
+          <p class="text-muted mb-1">Password is embedded in the URL fragment - the server never sees it. The recipient clicks the link and the file downloads automatically.</p>
+          <div class="share-row" style="margin-top:.6rem;">
+            <input type="text" id="share-oneclick" readonly style="font-size:.78rem;color:var(--muted);">
+            <button class="btn btn-secondary" id="copy-oneclick">Copy</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align:center;margin-top:.75rem;">
+        <button class="btn btn-secondary" id="reset-btn">Upload another file</button>
+      </div>
+    </div>
+
+</main>
+
+<footer>
+    <div class="footer-badges">
+      <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener">
+        <svg width="110" height="20" viewBox="0 0 110 20" xmlns="http://www.w3.org/2000/svg">
+          <rect width="110" height="20" rx="3" fill="#C8C"/>
+          <text x="55" y="14" text-anchor="middle" fill="#fff" font-size="9.5" font-weight="700" font-family="sans-serif">CC0 1.0</text>
+        </svg>
+      </a>
+      <a href="https://kopimi.com" target="_blank" rel="noopener">
+        <svg width="64" height="20" viewBox="0 0 64 20" xmlns="http://www.w3.org/2000/svg">
+          <rect width="64" height="20" rx="3" fill="#000"/>
+          <text x="32" y="13.5" text-anchor="middle" fill="#F9EB19" font-size="8" font-weight="700" font-family="sans-serif">KooPIM!</text>
+        </svg>
+      </a>
+    </div>
+   All encryption is performed locally in your browser using AES-256-GCM.<br>
+   The server stores only ciphertext and never sees your file or password.
+</footer>
+
+<script src="/assets/js/crypto-utils.js"></script>
+<script src="/assets/js/diceware.js"></script>
+<script src="/assets/js/upload.js"></script>
+</body>
+</html>

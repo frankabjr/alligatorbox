@@ -1,0 +1,311 @@
+:root {
+  --bg:        #0f172a;
+  --surface:   #1e293b;
+  --surface2:  #273548;
+  --border:    #334155;
+  --accent:    #3b82f6;
+  --accent-h:  #2563eb;
+  --success:   #22c55e;
+  --danger:    #ef4444;
+  --text:      #f1f5f9;
+  --muted:     #94a3b8;
+  --radius:    12px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Header ──────────────────────────────────────────────────────────────── */
+
+header {
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 1.5rem;
+}
+
+.header-inner {
+  max-width: 680px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+}
+
+/* ── Footer badges ──────────────────────────────────────────────────────── */
+
+.footer-badges {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: .5rem;
+  padding-top: 1rem;
+}
+
+.logo {
+  width: 2.25rem;
+  height: 2.25rem;
+  background: linear-gradient(135deg, var(--accent), #7c3aed);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.logo svg { width: 1.25rem; height: 1.25rem; color: #fff; }
+
+header h1 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -.02em;
+}
+
+header .tagline {
+  font-size: .8rem;
+  color: var(--muted);
+  margin-left: auto;
+}
+
+/* ── Main ────────────────────────────────────────────────────────────────── */
+
+main {
+  flex: 1;
+  max-width: 680px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+}
+
+/* ── Cards ───────────────────────────────────────────────────────────────── */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.card-title {
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+
+/* ── Drop zone ───────────────────────────────────────────────────────────── */
+
+#drop-zone {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+  position: relative;
+}
+
+#drop-zone:hover,
+#drop-zone.drag-over {
+  border-color: var(--accent);
+  background: rgba(59,130,246,.05);
+}
+
+.drop-icon { font-size: 2.5rem; margin-bottom: .5rem; }
+.drop-prompt p { color: var(--muted); font-size: .9rem; }
+.drop-prompt strong { color: var(--text); }
+
+/* File info (shown when file selected) */
+#file-info {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+}
+#file-info .fi-icon { font-size: 1.75rem; }
+#file-info .fi-meta { flex: 1; text-align: left; }
+#file-info .fi-meta .fi-name { font-weight: 600; word-break: break-all; }
+#file-info .fi-meta .fi-size { font-size: .8rem; color: var(--muted); margin-top: .15rem; }
+
+/* ── Settings ─────────────────────────────────────────────────────────────── */
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 480px) {
+  .settings-grid { grid-template-columns: 1fr; }
+}
+
+label {
+  display: block;
+  font-size: .8rem;
+  color: var(--muted);
+  margin-bottom: .4rem;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="number"],
+select {
+  width: 100%;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: .9rem;
+  padding: .55rem .75rem;
+  outline: none;
+  transition: border-color .15s;
+}
+input:focus, select:focus { border-color: var(--accent); }
+
+.pass-wrap {
+  position: relative;
+}
+.pass-wrap input { padding-right: 2.5rem; font-family: monospace; letter-spacing: .04em; }
+.pass-actions {
+  position: absolute;
+  right: .5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: .25rem;
+}
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: .15rem;
+  line-height: 1;
+  opacity: .7;
+  transition: opacity .15s;
+}
+.icon-btn:hover { opacity: 1; }
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+  padding: .65rem 1.25rem;
+  border-radius: 8px;
+  font-size: .9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: background .15s, opacity .15s;
+}
+.btn:disabled { opacity: .4; cursor: not-allowed; }
+
+.btn-primary   { background: var(--accent);  color: #fff; width: 100%; margin-top: .75rem; padding: .8rem; }
+.btn-primary:hover:not(:disabled) { background: var(--accent-h); }
+
+.btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { border-color: var(--accent); }
+
+.btn-success   { background: var(--success); color: #fff; }
+.btn-danger    { background: var(--danger);  color: #fff; }
+
+/* ── Progress ─────────────────────────────────────────────────────────────── */
+
+.progress-wrap {
+  background: var(--surface2);
+  border-radius: 999px;
+  height: .5rem;
+  overflow: hidden;
+  margin: 1rem 0 .5rem;
+}
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), #7c3aed);
+  border-radius: 999px;
+  transition: width .3s ease;
+  width: 0%;
+}
+.progress-label {
+  font-size: .8rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* ── Share section ────────────────────────────────────────────────────────── */
+
+.share-row {
+  display: flex;
+  gap: .5rem;
+  align-items: center;
+  margin-bottom: .75rem;
+}
+.share-row input { flex: 1; font-size: .85rem; }
+.share-row .btn  { flex-shrink: 0; padding: .55rem .9rem; font-size: .8rem; }
+
+.success-icon { font-size: 3rem; margin-bottom: .5rem; text-align: center; }
+
+/* ── File meta (download page) ────────────────────────────────────────────── */
+
+.meta-grid {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  margin-bottom: 1rem;
+}
+.meta-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: .9rem;
+}
+.meta-row .meta-key   { color: var(--muted); }
+.meta-row .meta-val   { font-weight: 500; }
+
+/* ── Utilities ────────────────────────────────────────────────────────────── */
+
+.hidden { display: none !important; }
+
+.text-center { text-align: center; }
+.text-muted  { color: var(--muted); font-size: .85rem; }
+.mt-1 { margin-top: .5rem; }
+.mt-2 { margin-top: 1rem; }
+.mb-1 { margin-bottom: .5rem; }
+
+.badge {
+  display: inline-block;
+  padding: .2rem .5rem;
+  border-radius: 999px;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.badge-blue { background: rgba(59,130,246,.2); color: #93c5fd; }
+
+/* Shake animation for wrong password */
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20%,60%  { transform: translateX(-6px); }
+  40%,80%  { transform: translateX(6px); }
+}
+.shake { animation: shake .4s ease; }
+
+/* ── Footer ──────────────────────────────────────────────────────────────── */
+
+footer {
+  text-align: center;
+  padding: 1.5rem;
+  font-size: .78rem;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+}

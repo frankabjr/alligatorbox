@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlligatorBox - Download Encrypted File</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+
+<header>
+    <div class="header-inner">
+      <div class="logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+      </div>
+      <h1>AlligatorBox</h1>
+      <span class="badge badge-blue">E2E Encrypted</span>
+      <a href="/" style="margin-left:auto;color:var(--muted);font-size:.85rem;text-decoration:none;">&uarr; Upload a file</a>
+    </div>
+</header>
+
+<main>
+
+    <!-- - Info / password entry state -->
+    <div id="info-state" class="hidden">
+      <div class="card">
+        <div class="card-title">Encrypted file</div>
+
+        <div class="meta-grid">
+          <div class="meta-row">
+            <span class="meta-key">Size</span>
+            <span class="meta-val" id="meta-size">&mdash;</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-key">Expiration</span>
+            <span class="meta-val" id="meta-expiry">&mdash;</span>
+          </div>
+        </div>
+
+        <p class="text-muted mb-1">Enter the password you received to decrypt and download this file. Decryption happens entirely in your browser.</p>
+
+        <label for="password" style="margin-top:.75rem;display:block;">Password</label>
+        <div class="pass-wrap">
+          <input type="password" id="password" placeholder="Enter decryption password" autocomplete="off" spellcheck="false">
+          <div class="pass-actions">
+            <button class="icon-btn" id="toggle-pass" title="Show/hide">&#128065;</button>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" id="download-btn" style="margin-top:.75rem;">
+          &#128275; Decrypt &amp; Download
+        </button>
+      </div>
+    </div>
+
+
+    <!-- - Download / decrypt progress -->
+    <div id="download-state" class="hidden">
+      <div class="card">
+        <div class="card-title">Downloading</div>
+        <div style="font-size:1.1rem;font-weight:600;margin-bottom:.5rem;">Downloading &amp; decrypting&hellip;</div>
+        <p class="text-muted mb-1">Decryption runs locally. Your password is never sent to the server.</p>
+        <div class="progress-wrap">
+          <div class="progress-bar" id="dl-progress-bar"></div>
+        </div>
+        <div class="progress-label" id="dl-progress-label">Starting&hellip;</div>
+      </div>
+    </div>
+
+
+    <!-- - Done state -->
+    <div id="done-state" class="hidden">
+      <div class="card text-center">
+        <div class="success-icon">&#10004;&#65039;</div>
+        <div style="font-size:1.2rem;font-weight:700;margin-bottom:.25rem;">Download complete!</div>
+        <p class="text-muted"><span id="done-filename" style="color:var(--text);font-weight:500;"></span> has been saved to your downloads folder.</p>
+        <div style="margin-top:1.25rem;">
+          <a href="/" class="btn btn-secondary">Upload a file</a>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- - Error state -->
+    <div id="error-state" class="hidden">
+      <div class="card text-center">
+        <div class="success-icon">&#9888;&#65039;</div>
+        <div style="font-size:1.1rem;font-weight:700;margin-bottom:.5rem;">Something went wrong</div>
+        <p class="text-muted" id="error-msg"></p>
+        <div style="margin-top:1.25rem;">
+          <a href="/" class="btn btn-secondary">Go to upload page</a>
+        </div>
+      </div>
+    </div>
+
+</main>
+
+<footer>
+    <div class="footer-badges">
+      <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener">
+        <svg width="110" height="20" viewBox="0 0 110 20" xmlns="http://www.w3.org/2000/svg">
+          <rect width="110" height="20" rx="3" fill="#C8C"/>
+          <text x="55" y="14" text-anchor="middle" fill="#fff" font-size="9.5" font-weight="700" font-family="sans-serif">CC0 1.0</text>
+        </svg>
+      </a>
+      <a href="https://kopimi.com" target="_blank" rel="noopener">
+        <svg width="64" height="20" viewBox="0 0 64 20" xmlns="http://www.w3.org/2000/svg">
+          <rect width="64" height="20" rx="3" fill="#000"/>
+          <text x="32" y="13.5" text-anchor="middle" fill="#F9EB19" font-size="8" font-weight="700" font-family="sans-serif">KooPIM!</text>
+        </svg>
+      </a>
+    </div>
+   All decryption is performed locally in your browser using AES-256-GCM.<br>
+   The server stores only ciphertext and never sees your file or password.
+</footer>
+
+<script src="/assets/js/crypto-utils.js"></script>
+<script src="/assets/js/download.js"></script>
+</body>
+</html>

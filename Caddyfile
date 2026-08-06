@@ -1,0 +1,46 @@
+# Caddyfile for AlligatorBox
+# ---------------------------------------------------------------------------
+# Caddy terminates HTTPS and reverse-proxies to the Go server, which stays
+# bound to localhost. HTTPS is required so the browser exposes crypto.subtle
+# (the Web Crypto API only works in a secure context).
+#
+# Run the Go server bound to localhost:
+#     ./alligatorbox-linux-amd64 -b 127.0.0.1 -p 8080
+#
+# Then start Caddy:
+#     caddy run --config ./Caddyfile        # foreground, for testing
+#     sudo caddy start --config ./Caddyfile # background
+# ---------------------------------------------------------------------------
+
+# === Option A: you have a domain pointing at this server (recommended) ======
+# Replace files.example.com with your actual domain. Caddy automatically
+# obtains and renews a free Let's Encrypt certificate — nothing else to do.
+files.example.com {
+	# Uploads are chunked (max 2 MB per request in the app), but set a generous
+	# ceiling so large multi-chunk transfers aren't rejected by the proxy.
+	request_body {
+		max_size 5MB
+	}
+
+	reverse_proxy 127.0.0.1:8080
+
+	encode gzip
+	log {
+		output file /var/log/caddy/alligatorbox.log
+	}
+}
+
+# === Option B: no domain, access by IP on a LAN =============================
+# Let's Encrypt cannot issue certs for a bare IP, so use Caddy's internal CA
+# to serve a self-signed cert. Browsers will show a one-time trust warning
+# (expected), but crypto.subtle will be enabled because the origin is https.
+# Uncomment this block and comment out Option A above, replacing the IP.
+#
+# https://192.168.1.50 {
+# 	tls internal
+# 	request_body {
+# 		max_size 5MB
+# 	}
+# 	reverse_proxy 127.0.0.1:8080
+# 	encode gzip
+# }

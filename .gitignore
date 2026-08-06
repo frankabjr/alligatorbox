@@ -1,0 +1,42 @@
+# Compiled binaries (all architectures)
+alligatorbox*
+
+# Runtime data directory
+data/
+
+# Go build artifacts
+*.exe
+*.out
+*.a
+
+# Caddy local dev data
+caddy-data/
+
+# OS junk files
+.DS_Store
+.DS_store
+.AppleDouble
+.LSOverride
+._*
+
+# macOS Resource Forks
+__MACOSX
+
+# Go module cache (just in case)
+pkg/
+modcache/
+
+# IDE / editor settings
+.idea/
+.vscode/
+
+# Claude Code local config (contains no secrets but best kept local)
+.claude/settings.local.json
+*.swp
+*.swo
+*~
+
+# Node (not used, but common — stay clean)
+node_modules/
+package.json
+package-lock.json
