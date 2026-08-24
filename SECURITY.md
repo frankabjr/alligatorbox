@@ -14,7 +14,7 @@ AlligatorBox is a **zero-knowledge** encrypted file-sharing application. All enc
 ## What the Server Does Store
 
 - **Encrypted ciphertext** in `data/files/{token}/data.bin`.
-- **Metadata** including file name, size, encrypted size, expiration settings, download count, salt (16 bytes), and base IV (12 bytes) in `meta.json`.
+- **Metadata** including the file name (encrypted with AES-256-GCM, then base64-encoded), size, encrypted size, expiration settings, download count, salt (16 bytes), and base IV (12 bytes) in `meta.json`.
 - The salt and base IV are required for decryption but are not secrets — they must be stored alongside the ciphertext.
 
 ## Cryptographic Details
@@ -83,7 +83,7 @@ The cert/key pair lives in `data/cert.pem` and `data/key.pem`. On restarts, exis
 
 4. **Use TLS in production.** The `-tls` flag provides self-signed certs suitable for local development and LAN access. For public servers, use a reverse proxy (e.g., Caddy) with a valid certificate. Never expose unencrypted HTTP to any network beyond your local loopback.
 
-5. **Be aware of metadata.** File names are stored in plaintext in `meta.json`. Do not upload files whose names reveal sensitive information.
+5. **Be aware of metadata.** File names are **encrypted with AES-256-GCM** (same key as the file body, IV counter `0xFFFFFFFF`) and then **base64-encoded** so the ciphertext fits in the JSON `name` field. Base64 is only an encoding — the confidentiality comes from AES-256-GCM — so the contents are not readable on disk; however, the encoded length still reveals the plaintext byte length. Avoid names whose length alone reveals sensitive information.
 
 ## Known Considerations
 
