@@ -36,7 +36,8 @@ go build -o bitbox .
   - `GET /api/file/chunk/{token}/{start}/{length}` – serves a byte range from `data/files/{token}/data.bin`. Increments download counter on `start==0`.
 - File storage layout: `data/uploads/{uploadToken}/{meta.json,data.bin}` and `data/files/{dlToken}/{meta.json,data.bin}`.
 - Token validation uses `regexp.MustCompile(`^[0-9a-f]{32}$`)` to prevent path traversal.
-- Expiry is checked lazily on every metadata/chunk request (not via a background goroutine).
+- Expiry is enforced two ways: **lazily** on every metadata/chunk request, and **proactively** by a background sweep. `main.go` calls `h.StartCleanupSweep(time.Hour)` (runs once at startup, then hourly), which invokes `Handler.SweepExpired` — it removes any file older than the 30-day hard cap (the `maxRetention` constant) or already expired via `expired()` (a shorter time limit, or a download-count limit reached). This guarantees files that expire but are never accessed actually get deleted instead of lingering on disk forever.
+- Retention is capped at **30 days** server-side regardless of the user's choice; the upload UI's "Delete after N days" is limited to 1–30 (default 10), and "0" means "use the 30-day default." "Delete after N downloads" defaults to 5.
 
 ### Frontend (`static/`)
 

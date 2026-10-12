@@ -16,6 +16,12 @@ import (
 
 var tokenRe = regexp.MustCompile(`^[0-9a-f]{32}$`)
 
+// maxRetention is the hard server-side cap: every stored file is deleted no
+// later than 30 days after upload, regardless of what the uploader chose.
+// Files with a shorter user-set expiry (days or download count) are removed
+// earlier by the same sweep.
+const maxRetention = 30 * 24 * time.Hour
+
 type Handler struct {
 	dataDir string
 }
@@ -306,6 +312,58 @@ func expired(meta *FileMeta) bool {
 		return true
 	}
 	return false
+}
+
+// SweepExpired scans every finished file in data/files/ and removes any that
+// should no longer be retained: files whose own expiry has passed (time or
+// download count) and, as a hard cap, any file older than maxRetention (30
+// days). It returns the number of directories removed. Unreadable or
+// metadata-less entries are skipped rather than deleted.
+func (h *Handler) SweepExpired() (int, error) {
+	filesDir := filepath.Join(h.dataDir, "files")
+	entries, err := os.ReadDir(filesDir)
+	if err != nil {
+		return 0, err
+	}
+
+	now := time.Now()
+	removed := 0
+	for _, e := range entries {
+		if !e.IsDir() {
+			continue
+		}
+		dlDir := filepath.Join(filesDir, e.Name())
+		meta, err := readMeta(dlDir)
+		if err != nil {
+			continue // no readable metadata — leave it for a human to inspect
+		}
+		age := now.Sub(time.Unix(meta.Since, 0))
+		if expired(meta) || age >= maxRetention {
+			if err := os.RemoveAll(dlDir); err != nil {
+				log.Printf("warning: could not delete expired file %s: %v", e.Name(), err)
+				continue
+			}
+			removed++
+		}
+	}
+	return removed, nil
+}
+
+// StartCleanupSweep launches a background goroutine that runs the auto-delete
+// sweep once immediately and then every interval. Files that expire but are
+// never requested would otherwise linger on disk forever (lazy expiry only
+// fires on access), so this guarantees the 30-day cap is actually enforced.
+func (h *Handler) StartCleanupSweep(interval time.Duration) {
+	go func() {
+		for {
+			if n, err := h.SweepExpired(); err != nil {
+				log.Printf("cleanup sweep error: %v", err)
+			} else if n > 0 {
+				log.Printf("cleanup sweep removed %d expired file(s)", n)
+			}
+			time.Sleep(interval)
+		}
+	}()
 }
 
 func readMeta(dir string) (*FileMeta, error) {

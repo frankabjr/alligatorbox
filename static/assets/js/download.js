@@ -68,12 +68,16 @@ async function loadMeta() {
     if (fileMeta.expireDays > 0) {
       const exp = new Date((fileMeta.since + fileMeta.expireDays * 86400) * 1000);
       parts.push(`Expires ${exp.toLocaleDateString()}`);
+    } else {
+      // 0 = auto: the server enforces a 30-day hard cap.
+      const exp = new Date((fileMeta.since + 30 * 86400) * 1000);
+      parts.push(`Auto-deletes ${exp.toLocaleDateString()}`);
     }
     if (fileMeta.expireDownloads > 0) {
       const left = fileMeta.expireDownloads - fileMeta.downloads;
       parts.push(`${left} download${left !== 1 ? 's' : ''} remaining`);
     }
-    metaExpiry.textContent = parts.length ? parts.join(' · ') : 'No expiration';
+    metaExpiry.textContent = parts.join(' · ');
 
     showState(infoState);
 

@@ -49,6 +49,10 @@ func main() {
 
 	h := handlers.New(dataDir)
 
+	// Start the background auto-delete sweep: removes files older than 30 days
+	// (and any shorter user-set expiry) immediately at startup, then hourly.
+	h.StartCleanupSweep(time.Hour)
+
 	mux := http.NewServeMux()
 
 	// API routes

@@ -68,14 +68,15 @@
         <div class="card-title">Expiration (optional)</div>
         <div class="settings-grid">
           <div>
-            <label for="expire-days">Delete after N days</label>
-            <input type="number" id="expire-days" min="0" max="365" placeholder="0 = never">
+            <label for="expire-days">Delete after N days <span class="hint">default 10</span></label>
+            <input type="number" id="expire-days" min="0" max="30" value="10" placeholder="0 = 30-day default">
           </div>
           <div>
-            <label for="expire-downloads">Delete after N downloads</label>
-            <input type="number" id="expire-downloads" min="0" max="999" placeholder="0 = unlimited">
+            <label for="expire-downloads">Delete after N downloads <span class="hint">default 5</span></label>
+            <input type="number" id="expire-downloads" min="0" max="999" value="5" placeholder="0 = unlimited">
           </div>
         </div>
+        <p class="text-muted mt-1">All files are automatically deleted <strong>30 days</strong> after upload &mdash; even if no expiry is set above. This is the maximum; the options let a file self-destruct sooner.</p>
       </div>
 
       <button class="btn btn-primary" id="upload-btn" disabled>
@@ -104,33 +105,31 @@
       <div class="card">
         <div class="success-icon">&#127889;</div>
         <div style="font-size:1.2rem;font-weight:700;text-align:center;margin-bottom:.25rem;">File ready to share!</div>
-        <p class="text-muted text-center mb-1">Send the link <em>and</em> the password to the recipient. Keep them separate for security.</p>
+        <p class="text-muted text-center mb-1">Share the one-click link below &mdash; your recipient just clicks it and the file downloads automatically.</p>
 
-        <div style="margin-top:1.25rem;">
+        <div class="oneclick-primary">
+          <div class="card-title">One-click sharing link <span class="badge badge-blue">Recommended</span></div>
+          <p class="text-muted mb-1">The password is embedded in the URL fragment &mdash; the server never sees it. Clicking the link downloads the file automatically.</p>
+          <div class="share-row" style="margin-top:.6rem;">
+            <input type="text" id="share-oneclick" readonly style="font-size:.78rem;color:var(--muted);">
+            <button class="btn btn-primary" id="copy-oneclick" style="width:auto;flex-shrink:0;padding:.55rem 1rem;font-size:.8rem;margin-top:0;">&#128203; Copy link</button>
+          </div>
+        </div>
+
+        <div class="manual-share">
+          <div class="card-title">Share manually (link + password separately)</div>
+          <p class="text-muted mb-1">For maximum security, send the link and password through different channels.</p>
           <label>Download link</label>
           <div class="share-row">
             <input type="text" id="share-url" readonly>
             <button class="btn btn-secondary" id="copy-url">Copy link</button>
           </div>
-
           <label>Password</label>
           <div class="share-row">
             <input type="text" id="share-pass" readonly style="font-family:monospace;letter-spacing:.04em;">
             <button class="btn btn-secondary" id="copy-pass">Copy password</button>
           </div>
-
-          <button class="btn btn-primary" id="copy-both" style="margin-top:.5rem;">
-            &#128203; Copy link + password
-          </button>
-        </div>
-
-        <div style="margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border);">
-          <div class="card-title">One-click sharing link</div>
-          <p class="text-muted mb-1">Password is embedded in the URL fragment - the server never sees it. The recipient clicks the link and the file downloads automatically.</p>
-          <div class="share-row" style="margin-top:.6rem;">
-            <input type="text" id="share-oneclick" readonly style="font-size:.78rem;color:var(--muted);">
-            <button class="btn btn-secondary" id="copy-oneclick">Copy</button>
-          </div>
+          <button class="btn btn-secondary" id="copy-both" style="margin-top:.5rem;width:100%;">&#128203; Copy link + password</button>
         </div>
       </div>
 
@@ -156,6 +155,10 @@
         </svg>
       </a>
     </div>
+   <a href="https://github.com/frankabjr/alligatorbox" target="_blank" rel="noopener" class="footer-repo" title="View source on GitHub">
+     <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+     View source on GitHub
+   </a>
    All encryption is performed locally in your browser using AES-256-GCM.<br>
    The server stores only ciphertext and never sees your file or password.
 </footer>
